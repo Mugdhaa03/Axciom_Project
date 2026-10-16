@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] · AcxiomCRM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/AcxiomCRM.styles.css" asp-append-version="true" />
+</head>
+<body>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <div class="app-shell">
+            <aside class="sidebar">
+                <a class="brand" asp-controller="Dashboard" asp-action="Index">
+                    <span class="brand-mark">A</span>
+                    <span><strong>Acxiom</strong><small>CRM PLATFORM</small></span>
+                </a>
+                <div class="sidebar-label">Workspace</div>
+                <nav class="side-nav">
+                    <a asp-controller="Dashboard" asp-action="Index"><span class="nav-icon">⌂</span>Overview</a>
+                    <a asp-controller="Customers" asp-action="Index"><span class="nav-icon">♙</span>Customers</a>
+                    <a asp-controller="Leads" asp-action="Index"><span class="nav-icon">◈</span>Leads</a>
+                    <a asp-controller="Opportunities" asp-action="Index"><span class="nav-icon">↗</span>Opportunities</a>
+                    <a asp-controller="FollowUps" asp-action="Index"><span class="nav-icon">◷</span>Follow-ups</a>
+                    <a asp-controller="Activities" asp-action="Index"><span class="nav-icon">✓</span>Activities</a>
+                </nav>
+                <div class="sidebar-label mt-4">Insights</div>
+                <nav class="side-nav">
+                    @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                    {
+                        <a asp-controller="Reports" asp-action="Index"><span class="nav-icon">▥</span>Reports</a>
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-controller="Audit" asp-action="Index"><span class="nav-icon">◉</span>Audit log</a>
+                    }
+                </nav>
+                <div class="sidebar-footer"><span class="status-dot"></span> System operational</div>
+            </aside>
+            <div class="main-panel">
+                <header class="topbar">
+                    <div class="mobile-brand"><span class="brand-mark">A</span><strong>AcxiomCRM</strong></div>
+                    <div class="topbar-actions">
+                        <span class="topbar-date">@DateTime.Now.ToString("dddd, MMMM d")</span>
+                        <span class="avatar">@((User.Identity?.Name ?? "U")[0].ToString().ToUpperInvariant())</span>
+                        <div class="user-menu"><strong>@User.Identity?.Name</strong><small>CRM user</small></div>
+                        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                            <button type="submit" class="logout-btn" title="Sign out">↪</button>
+                        </form>
+                    </div>
+                </header>
+                <main role="main" class="content-area">@RenderBody()</main>
+                <footer class="app-footer">&copy; 2026 AcxiomCRM <span>·</span> Built for better customer relationships</footer>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="public-shell">
+            <header class="public-nav">
+                <a class="brand public-brand" asp-controller="Home" asp-action="Index">
+                    <span class="brand-mark">A</span>
+                    <span><strong>Acxiom</strong><small>CRM PLATFORM</small></span>
+                </a>
+                <partial name="_LoginPartial" />
+            </header>
+            <main role="main">@RenderBody()</main>
+        </div>
+    }
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

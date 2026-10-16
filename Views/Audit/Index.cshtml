@@ -1,0 +1,2 @@
+@model IEnumerable<AcxiomCRM.Models.AuditLog>
+@{ ViewData["Title"]="Audit Log"; }<h1>Audit Log</h1><div class="table-responsive"><table class="table table-sm"><thead><tr><th>Date</th><th>User</th><th>Action</th><th>Entity</th><th>Record</th><th>Result</th></tr></thead><tbody>@foreach(var x in Model){<tr><td>@x.CreatedDate.ToLocalTime()</td><td>@x.UserId</td><td>@x.Action</td><td>@x.EntityName</td><td>@x.RecordId</td><td>@x.Result</td></tr>}</tbody></table></div>

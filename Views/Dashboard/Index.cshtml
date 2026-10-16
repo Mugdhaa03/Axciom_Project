@@ -1,0 +1,12 @@
+@using System.Text.Json
+@{ ViewData["Title"] = "Dashboard"; }
+<div class="d-flex justify-content-between align-items-center mb-4"><div><div class="eyebrow">Workspace overview</div><h1 class="display-6 fw-bold mb-1">Good to see you again</h1><p class="text-muted mb-0">Here is what is happening across your customer pipeline.</p></div><span class="badge rounded-pill bg-success px-3 py-2">● Connected</span></div>
+<div class="row g-3 mb-4">
+@foreach (var item in new[] { ("Customers", ViewBag.Customers, "royal"), ("Leads", ViewBag.Leads, "blue"), ("Open Leads", ViewBag.OpenLeads, "orange"), ("Opportunities", ViewBag.Opportunities, "purple"), ("Open Pipeline", ViewBag.Pipeline, "green"), ("Won", ViewBag.Won, "navy") }) { <div class="col-md-2"><div class="kpi-card @item.Item3"><div class="kpi-label">@item.Item1</div><div class="kpi-value">@item.Item2</div><div class="kpi-trend">Live database value</div></div></div> }
+</div>
+<div class="row g-4"><div class="col-lg-6"><div class="card shadow-sm"><div class="card-header">Lead Status</div><div class="card-body"><canvas id="leadChart"></canvas></div></div></div><div class="col-lg-6"><div class="card shadow-sm"><div class="card-header">Opportunity Pipeline</div><div class="card-body"><canvas id="oppChart"></canvas></div></div></div></div>
+@section Scripts { <script src="https://cdn.jsdelivr.net/npm/chart.js"></script><script>
+const leads=@Html.Raw(JsonSerializer.Serialize(ViewBag.LeadChart)); const opps=@Html.Raw(JsonSerializer.Serialize(ViewBag.OpportunityChart));
+new Chart(document.getElementById('leadChart'),{type:'doughnut',data:{labels:leads.map(x=>x.label),datasets:[{data:leads.map(x=>x.count),backgroundColor:['#0d6efd','#20c997','#ffc107','#dc3545','#6f42c1']}]},options:{plugins:{legend:{position:'bottom'}}}});
+new Chart(document.getElementById('oppChart'),{type:'bar',data:{labels:opps.map(x=>x.label),datasets:[{label:'Amount',data:opps.map(x=>x.amount),backgroundColor:'#0d6efd'}]},options:{scales:{y:{beginAtZero:true}}}});
+</script> }
